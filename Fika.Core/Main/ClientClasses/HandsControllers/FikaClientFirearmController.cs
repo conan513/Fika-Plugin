@@ -1,4 +1,4 @@
-﻿// © 2026 Lacyway All Rights Reserved
+// © 2026 Lacyway All Rights Reserved
 
 using System;
 using System.Collections.Generic;
@@ -62,7 +62,15 @@ public class FikaClientFirearmController : Player.FirearmController
     public override void Destroy()
     {
         _packet = null;
-        base.Destroy();
+        try
+        {
+            base.Destroy();
+        }
+        catch (NullReferenceException)
+        {
+            // Suppress NullReferenceException during teardown (e.g. FikaBot.OnDestroy / Player.Dispose)
+            // where the Unity Animator is already destroyed before EFT's FirearmsAnimator.SetBoltCatch runs.
+        }
     }
 
     public override void SetWeaponOverlapValue(float overlap)
